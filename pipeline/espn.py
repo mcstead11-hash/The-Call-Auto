@@ -7,7 +7,7 @@ LEAGUES = {'nfl': 'NFL', 'college-football': 'CFB'}
 
 
 def _get(url):
-    req = urllib.request.Request(url, headers={'User-Agent': 'the-call-bot/1.0'})
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; the-call/1.0)', 'Accept': 'application/json'})
     with urllib.request.urlopen(req, timeout=20) as r:
         return json.load(r)
 
