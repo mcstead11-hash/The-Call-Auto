@@ -1,5 +1,5 @@
 {
-  "current": "gb-chi-sideline-catch",
+  "current": "ari-lar-ur-q4-047-873004",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -27,6 +27,46 @@
       "favors": {
         "a": "GB",
         "b": "CHI"
+      }
+    },
+    "ari-lar-ur-q4-047-873004": {
+      "sample": false,
+      "meta": "NFL · Rams 16, Cardinals 15 · Q4 0:47 · 1st & 10 at ARI 35",
+      "question": "Was it unnecessary roughness?",
+      "desc": "J.Brissett pass deep middle to J.Brooks to LA 44 for 21 yards (J.Wallace). Flag on the Rams: unnecessary roughness, 15 yards.",
+      "clip": "",
+      "watch": "https://www.espn.com/nfl/game/_/gameId/401873004",
+      "teams": [
+        {
+          "key": "ARI",
+          "name": "Cardinals",
+          "color": "#a40227"
+        },
+        {
+          "key": "LAR",
+          "name": "Rams",
+          "color": "#003594"
+        }
+      ],
+      "options": {
+        "a": "Flag",
+        "b": "No flag"
+      },
+      "open": true,
+      "auto": {
+        "league": "nfl",
+        "event": "401873004",
+        "espn_play": "4018730043996",
+        "score": 54.1,
+        "detected": "2026-10-22T09:55:22+00:00"
+      },
+      "favors": {
+        "a": "ARI",
+        "b": "LAR"
+      },
+      "impact": {
+        "swing": 38,
+        "toward": "ARI"
       }
     }
   }
