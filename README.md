@@ -17,7 +17,7 @@ A one-page vote on a single disputed play. Pick your side, make the call, then s
 1. **Supabase** (free tier is plenty): create a project at supabase.com.
    - SQL Editor: paste `schema.sql` and run it.
    - Authentication > Sign In / Providers: turn on **Allow anonymous sign-ins**.
-   - Project Settings > API: copy the Project URL and the `anon` public key into `config.js`.
+   - Project Settings > API: copy the Project URL (Connect button) and the publishable key (`sb_publishable_...`, or the legacy `anon` key) into `config.js`. Never put the secret key in this repo.
 2. **GitHub Pages**: push these files to the public repo `mcstead11-hash/The-Call-Auto`, then Settings > Pages > Deploy from branch `main`, folder `/`.
    The page goes live at `https://mcstead11-hash.github.io/The-Call-Auto/`. If the repo or address differs, update the `og:` and `twitter:` tags in `index.html`.
 
