@@ -39,6 +39,7 @@ def teams(summary_json):
             'id': str(t['id']),
             'abbr': t.get('abbreviation', ''),
             'name': t.get('shortDisplayName') or t.get('name') or t.get('displayName'),
+            'location': t.get('location') or '',
             'color': '#' + (t.get('color') or '8A93A6').lstrip('#'),
             'alt': '#' + (t.get('alternateColor') or 'EDF0F6').lstrip('#'),
             'side': c.get('homeAway'),

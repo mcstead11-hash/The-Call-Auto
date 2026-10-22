@@ -103,11 +103,13 @@ def build(c, teams, league, event_id):
         who = penalized['name'] if penalized else pen['abbr']
         yds = f", {pen['yards']} yards" if pen['yards'] else ''
         call = f"Flag on the {who}: {pen['name'].lower()}{yds}."
-        if pen['no_play'] and action:
+        if rev:
+            call += ' Overturned on replay.' if rev['outcome'] == 'reversed' else ' Upheld on replay.'
+        elif pen['no_play'] and action:
             call += ' The play came back.'
     else:
         call = 'Overturned on replay.' if rev['outcome'] == 'reversed' else 'Ruling stood after review.'
-    if rev and action:
+    if rev and not pen and action:
         action = 'Called on the field: ' + action
     desc = (action + '. ' if action else '') + call
 

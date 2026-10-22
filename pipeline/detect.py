@@ -51,7 +51,21 @@ def _clock_seconds(play):
         return 900
 
 
-def _penalty(play, teams_by_abbr):
+def team_for(abbr, teams):
+    """Match a play-by-play abbreviation to a team, including college feeds' own spellings (KAN, WISC, RUT)."""
+    abbr = ABBR_ALIASES.get(abbr.upper(), abbr.upper())
+    for test in (
+        lambda t: t['abbr'].upper() == abbr,
+        lambda t: re.sub(r'[^A-Z]', '', t['location'].upper()).startswith(abbr),
+        lambda t: ''.join(w[0] for w in t['location'].upper().split()) in (abbr, abbr.rstrip('U')),
+    ):
+        hits = sorted((t for t in teams.values() if test(t)), key=lambda t: len(t['location']))
+        if len(hits) == 1 or (hits and len(hits[0]['location']) < len(hits[1]['location'])):
+            return hits[0]  # "KAN" in Kansas vs Kansas State means Kansas
+    return None
+
+
+def _penalty(play, teams):
     text = play.get('text') or ''
     if 'PENALTY' not in text.upper():
         return None
@@ -61,7 +75,7 @@ def _penalty(play, teams_by_abbr):
     tail = text[m.end():m.end() + 40].lower()
     if 'declined' in text[m.start():m.end() + 20].lower() or 'offsetting' in text.lower():
         return None
-    abbr = ABBR_ALIASES.get(m.group(1).upper(), m.group(1).upper())
+    abbr = m.group(1).upper()
     name = m.group(2).strip().rstrip('.')
     weight, kind = 0.5, 'penalty'
     for pat, w, k in PENALTY_WEIGHT:
@@ -70,7 +84,7 @@ def _penalty(play, teams_by_abbr):
             break
     return {
         'abbr': abbr,
-        'team': teams_by_abbr.get(abbr),
+        'team': team_for(abbr, teams),
         'name': name,
         'yards': int(m.group(3)) if m.group(3) else None,
         'weight': weight,
@@ -99,6 +113,8 @@ def _review(play):
 
 
 def _subject(t):
+    if 'targeting' in t:
+        return 'targeting'
     if re.search(r'complet|incomplete|catch|reception', t):
         return 'catch'
     if re.search(r'intercept', t):
@@ -115,14 +131,13 @@ def _subject(t):
 def candidates(plays, wp, teams, cfg=None):
     """Score every play that holds a disputed call. Returns a list sorted best first."""
     cfg = {**DEFAULTS, **(cfg or {})}
-    by_abbr = {t['abbr'].upper(): t for t in teams.values()}
     home = next((t for t in teams.values() if t['side'] == 'home'), None)
     out = []
     prev_wp, prev = None, None
     for p in plays:
         pid = str(p.get('id'))
         cur_wp = wp.get(pid, prev_wp)
-        pen, rev = _penalty(p, by_abbr), _review(p)
+        pen, rev = _penalty(p, teams), _review(p)
         if (pen and pen['weight'] > 0) or rev:
             swing = abs(cur_wp - prev_wp) * 100 if (cur_wp is not None and prev_wp is not None) else None
             weight = max(pen['weight'] if pen else 0, rev['weight'] if rev else 0)

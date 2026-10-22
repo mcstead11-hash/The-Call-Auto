@@ -5,12 +5,6 @@ on:
 jobs:
   replay:
     runs-on: ubuntu-latest
-    env:
-      TEXT_WIDTH: '400'
-      SAMPLES: '0'
     steps:
       - uses: actions/checkout@v4
-      - run: python3 -m pipeline.run --league nfl --date 20261018 --dry-run --top 15
-      - run: python3 -m pipeline.run --league nfl --date 20261019 --dry-run --top 5
-      - run: python3 -m pipeline.run --league college-football --date 20261017 --dry-run --top 15
-      - run: SAMPLES=2 python3 -m pipeline.run --league nfl --date 20261018 --dry-run --top 0
+      - run: SAMPLES=4 python3 -m pipeline.run --league college-football --date 20261017 --dry-run --top 0 | grep -E '^---|"(meta|question|desc|favors|a|b)"' 
