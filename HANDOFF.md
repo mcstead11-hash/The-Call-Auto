@@ -2,6 +2,8 @@
 
 Status as of 2026-10-22: **live and saving real votes.** Owner: Matt Stead (GitHub `mcstead11-hash`).
 
+**Update 2026-10-22: the bot.** Matt asked for the whole loop to run on its own: find high-impact referee calls during games, put them on the page, and post them. That's now `pipeline/` plus `.github/workflows/watch-games.yml` (see README "The bot"). Detection and page updates run unattended. Social posting is built but stays in draft mode until Matt approves a sample post, creates the accounts/credentials, and sets the repo variable `POSTING_MODE=live`. This supersedes "picking the disputed play still needs a human" below.
+
 ## What it is
 
 Homer is Matt's concept for a sports-only social app where each fan's team allegiance is locked until preseason, so every take shows which team the poster backs. "The Call" is the feature Matt is testing first, as a cheap standalone page. Each page shows one disputed play. Visitors:
@@ -75,8 +77,10 @@ Add an entry to `plays.json`, set `current` to its id, commit, and push to `main
 
 - Keep the full Homer mock-up untouched; The Call is a separate minimal test.
 - Host publicly (GitHub Pages + Supabase) rather than as a Claude artifact, because artifacts with stored data only open for people in Matt's org.
-- **X:** no automated posting for now. The X API's write access needs the paid tier (about $200/month). Plan: an agent drafts posts, and Matt posts by hand during games. Automate only if results start getting shared.
-- **Reddit:** manual only. r/nfl, r/CFB, etc. ban self-promotion and bot posting; an automated account would get banned.
+- **X:** originally manual because write access needed a ~$200/month tier. X moved to pay-per-use in 2026 (about $0.20 per post with a link, no monthly plan), so the bot can post once Matt adds credentials and approves.
+- **Reddit:** big subs (r/nfl, r/CFB, team subs) ban self-promotion and bot posting; an automated account there would get banned. The bot only posts to a subreddit Matt runs (`REDDIT_SUBREDDIT`). Reddit also requires approval for new API apps.
+- **Facebook:** posts only to a Facebook Page Matt admins (Graph API Page token). Groups can't be posted to by API.
+- **Video:** never re-host game footage (copyright). Link to the ESPN game page; embed official league YouTube highlights when a `YOUTUBE_API_KEY` is set.
 - Picking the disputed play still needs a human; a live data feed can't reliably detect "controversial".
 
 ## Open ideas / next steps
@@ -85,6 +89,13 @@ Add an entry to `plays.json`, set `current` to its id, commit, and push to `main
 2. Draft X posts and Reddit-appropriate wording for each play.
 3. Optional: per-play preview images, Supabase CAPTCHA, a simple results archive page of past plays.
 4. If shares take off: revisit X API automation, then the full Homer app.
+
+## Bot notes for an agent
+
+- ESPN's CDN (Akamai) returns 403 to unknown User-Agents; `pipeline/espn.py` sends a Mozilla-style one. The Claude cloud container can't reach ESPN at all; test through Actions (Run workflow with a past date and "Only print").
+- ESPN `winprobability[i]` is the home win probability *after* play i (checked against touchdowns).
+- Play-by-play team codes differ from team abbreviations (HST=HOU, BLT=BAL, ARZ=ARI, LA=LAR, WAS=WSH; college: KAN, WISC, RUT...). `detect.team_for` handles these.
+- State (which ESPN plays were used, daily counts, queued posts) is `pipeline/state.json`, committed by the workflow.
 
 ## Environment notes for an agent
 

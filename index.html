@@ -63,6 +63,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 .meta { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 40px; line-height: 1; text-wrap: balance; }
 .desc { margin: 0; color: #C9CFDB; font-size: 14px; }
+.impact { align-self: flex-start; padding: 3px 9px; border-radius: 999px; background: #1E1A10; color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 0.02em; }
+.replay a { color: var(--accent); font-weight: 600; }
 .sample { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
 .step { display: flex; flex-direction: column; gap: 10px; }
 .label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
@@ -122,6 +124,7 @@ h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 40px; 
       <span id="meta" class="meta"></span>
       <h1 id="q">Loading the play…</h1>
       <p id="desc" class="desc"></p>
+      <span id="impact" class="impact" hidden></span>
     </div>
   </section>
 
@@ -239,6 +242,17 @@ h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 40px; 
     document.title = 'Homer: ' + play.question;
     if (!play.open) { $('pill').className = 'pill closed'; $('pill').lastChild.textContent = 'VOTING CLOSED'; }
 
+    if (play.impact && TEAMS[play.impact.toward]) {
+      $('impact').hidden = false;
+      $('impact').textContent = 'Swung win probability ' + play.impact.swing + '% toward the ' + TEAMS[play.impact.toward].name;
+    }
+    if (!play.clip && play.watch) {
+      const r = $('replay');
+      r.textContent = ''; r.removeAttribute('role'); r.removeAttribute('aria-label');
+      const a = document.createElement('a');
+      a.href = play.watch; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Watch the play on the game page';
+      r.append(a);
+    }
     if (play.clip) {
       const r = $('replay');
       r.textContent = ''; r.removeAttribute('role'); r.removeAttribute('aria-label');

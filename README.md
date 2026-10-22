@@ -42,3 +42,33 @@ Votes are stored per play id, so never reuse an id.
 - The database allows one vote per person per play and has no edit or delete rule, so votes are final.
 - Visitors can read only their own vote; everyone else sees totals through the `tally` function.
 - Limit: someone who clears their browser data or uses a private window can vote again. That is fine for a test. Before a big launch, turn on Supabase's CAPTCHA option for sign-ins.
+
+## The bot (automatic plays)
+
+`.github/workflows/watch-games.yml` runs every 5 minutes (GitHub may delay scheduled runs by a few minutes at busy times). During live NFL and FBS games it:
+
+1. Reads ESPN's public play-by-play and win-probability feed (`pipeline/espn.py`).
+2. Scores every accepted judgment-call penalty and replay review by how much it moved win probability, weighted by how disputable that kind of call is, with extra weight late in close games and for touchdowns or turnovers a flag erased (`pipeline/detect.py`). Procedural flags (false start, delay of game, offside) are ignored. A missed call with no flag leaves no trace in the feed, so the bot can't find those.
+3. Builds the play card with a question that fits the call ("Was it pass interference?", "Was it a catch?", "Was it targeting?"), the teams and colors, the score and situation, and which answer helps which team (`pipeline/card.py`).
+4. Adds it to `plays.json`, makes it `current`, and writes a share page at `p/<play-id>/` so links show that play's question in previews (`pipeline/page.py`).
+5. Writes post drafts for X, Reddit and Facebook to `drafts/<play-id>.json`, and posts them only when posting is switched on (`pipeline/social.py`, `pipeline/post.py`).
+
+Limits so it doesn't flood the page or feeds: at most 2 plays per game, 8 per day, 10 minutes apart, and only calls from the last 25 minutes. Change them with repository variables `MAX_PER_GAME`, `MAX_PER_DAY`, `THRESHOLD` (default 15; higher means pickier).
+
+**Video:** game footage belongs to the leagues and broadcasters, so the bot never downloads or re-hosts clips. Each play links to its ESPN game page. With a `YOUTUBE_API_KEY` secret, it also embeds the game's official highlight video from the league's YouTube channel when one is up (usually after the game, and the whole highlight package, not just the one call).
+
+**Try it on a past day:** Actions > Watch games > Run workflow, enter a date like `20261018`, keep "Only print" ticked, and read the log.
+
+**Pause it:** Actions > Watch games > ⋯ > Disable workflow.
+
+### Turning on posting
+
+Posting stays in draft mode until the repository variable `POSTING_MODE` is `live`. Each platform also needs its own secrets (Settings > Secrets and variables > Actions):
+
+| Platform | Secrets | Notes |
+|---|---|---|
+| X | `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_SECRET` | Pay-per-use API credits; posts with a link cost about $0.20 each. App needs Read and Write. |
+| Reddit | `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET`, `REDDIT_USERNAME`, `REDDIT_PASSWORD`, variable `REDDIT_SUBREDDIT` | Script app. Only point it at a subreddit you run; r/nfl and r/CFB ban bot and self-promo posts. |
+| Facebook | `FB_PAGE_ID`, `FB_PAGE_TOKEN` | A Facebook Page you admin, with a long-lived Page token that has `pages_manage_posts`. |
+
+A platform with missing secrets is skipped; the others still post. Results are written back into the play's `drafts/` file.
