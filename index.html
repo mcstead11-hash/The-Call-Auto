@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Homer: The Call</title>
+<meta name="description" content="Pick your side, make the call, and see how each fan base voted.">
+<!-- Link previews on X, Reddit and group chats. Replace https://mcstead11-hash.github.io/The-Call-Auto with the live address (see README). -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Call: was it a catch?">
+<meta property="og:description" content="Pick your side, make the call, then see how each fan base voted.">
+<meta property="og:image" content="https://mcstead11-hash.github.io/The-Call-Auto/og.png">
+<meta property="og:url" content="https://mcstead11-hash.github.io/The-Call-Auto/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Call: was it a catch?">
+<meta name="twitter:description" content="Pick your side, make the call, then see how each fan base voted.">
+<meta name="twitter:image" content="https://mcstead11-hash.github.io/The-Call-Auto/og.png">
+<meta name="theme-color" content="#0D111C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one narrow column, the play on top, then team, vote, and the split by fan base. Deliberately dark, scoreboard-at-night. */
+:root {
+  --bg: #0D111C;
+  --surface: #161C2B;
+  --surface-2: #1F2738;
+  --line: #2A3347;
+  --fg: #EDF0F6;
+  --muted: #A3ACBE;
+  --accent: #F5B83D;
+  --on-accent: #1A1300;
+  --catch: #7CC4FF;
+  --on-catch: #08213A;
+  --nocatch: #3D4A66;
+  --neutral: #8A93A6;
+  --live: #FF5A5A;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --body: Inter, system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); }
+body { font-family: var(--body); font-size: 15px; line-height: 1.45; }
+[hidden] { display: none !important; }
+.wrap { max-width: 480px; margin: 0 auto; padding-block: max(20px, env(safe-area-inset-top, 0px)) 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 18px; }
+button, a.btn { font: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mark { display: flex; align-items: baseline; gap: 10px; }
+.mark b { font-family: var(--display); font-weight: 700; font-size: 30px; letter-spacing: 0.06em; color: var(--accent); line-height: 1; }
+.mark span { font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: 0.04em; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; background: #3A1416; color: #FF9A9A; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+.pill i { width: 7px; height: 7px; border-radius: 999px; background: var(--live); }
+.pill.closed { background: var(--surface-2); color: var(--muted); }
+.pill.closed i { background: var(--muted); }
+.banner { padding: 10px 12px; border-radius: 12px; background: var(--surface-2); color: var(--muted); font-size: 13px; }
+.play { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.replay { aspect-ratio: 16 / 9; width: 100%; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--muted); font-size: 12px; }
+.replay span { width: 54px; height: 54px; border-radius: 999px; background: var(--line); display: flex; align-items: center; justify-content: center; }
+.replay iframe, .replay video { width: 100%; height: 100%; border: 0; display: block; }
+.play-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; }
+.meta { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 40px; line-height: 1; text-wrap: balance; }
+.desc { margin: 0; color: #C9CFDB; font-size: 14px; }
+.sample { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.step { display: flex; flex-direction: column; gap: 10px; }
+.label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.teams { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.team { min-height: 56px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); color: var(--fg); font-weight: 700; font-size: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.team small { font-weight: 500; font-size: 11px; color: var(--muted); }
+.team[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-2); }
+.team .sw { width: 22px; height: 6px; border-radius: 3px; }
+.votes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.vote { min-height: 72px; border: none; border-radius: 16px; font-family: var(--display); font-weight: 700; font-size: 28px; letter-spacing: 0.03em; text-transform: uppercase; }
+.vote.a { background: var(--catch); color: var(--on-catch); }
+.vote.b { background: var(--nocatch); color: var(--fg); }
+.vote:disabled { opacity: 0.35; cursor: not-allowed; }
+.hint { font-size: 13px; color: var(--muted); margin: 0; }
+.you { padding: 12px 14px; border-radius: 14px; background: #1E1A10; border: 1px solid var(--accent); font-size: 14px; }
+.legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; }
+.row { display: flex; flex-direction: column; gap: 6px; }
+.row-head { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+.row-head .dot { width: 10px; height: 10px; border-radius: 999px; }
+.row-head .n { margin-left: auto; font-size: 12px; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar { display: flex; height: 32px; border-radius: 9px; overflow: hidden; background: var(--surface-2); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.bar .a { background: var(--catch); color: var(--on-catch); display: flex; align-items: center; padding-left: 8px; white-space: nowrap; transition: width 0.4s ease; }
+.bar .b { flex: 1; background: var(--nocatch); color: var(--fg); display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; white-space: nowrap; }
+.bar .a:empty, .bar .b:empty { padding: 0; }
+.bar.empty { align-items: center; justify-content: center; color: var(--muted); font-weight: 500; }
+.verdict { display: flex; flex-direction: column; gap: 2px; }
+.verdict b { font-family: var(--display); font-weight: 700; font-size: 28px; line-height: 1.05; }
+.share { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.share #copy, .share .status, .share textarea { grid-column: 1 / -1; }
+.btn { min-height: 48px; padding: 0 18px; border: none; border-radius: 12px; background: var(--accent); color: var(--on-accent); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.btn.ghost { background: var(--surface-2); color: var(--fg); }
+.share textarea { width: 100%; min-height: 96px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit; font-size: 13px; padding: 10px; resize: none; }
+.foot { border-top: 1px solid var(--line); padding-top: 16px; font-size: 13px; color: var(--muted); }
+.foot b { color: var(--fg); }
+.status { font-size: 13px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .bar .a { transition: none; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <div class="mark"><b>HOMER</b><span>The Call</span></div>
+    <span id="pill" class="pill"><i></i>LIVE VOTE</span>
+  </div>
+
+  <p id="preview" class="banner" hidden>Preview mode: votes are not saved until the database is connected.</p>
+
+  <section class="play" aria-labelledby="q">
+    <div id="replay" class="replay" role="img" aria-label="Replay clip placeholder">
+      <span><svg width="22" height="22" viewBox="0 0 24 24" fill="#EDF0F6" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+      [Replay clip of the play]
+    </div>
+    <div class="play-body">
+      <span id="sample" class="sample" hidden>Sample play</span>
+      <span id="meta" class="meta"></span>
+      <h1 id="q">Loading the play…</h1>
+      <p id="desc" class="desc"></p>
+    </div>
+  </section>
+
+  <div id="voteArea" class="step" hidden>
+    <div class="step">
+      <span class="label">1 · Who do you root for in this game?</span>
+      <div id="teams" class="teams" role="group" aria-label="Your side"></div>
+    </div>
+    <div class="step">
+      <span class="label">2 · Make the call</span>
+      <div class="votes">
+        <button id="voteA" class="vote a" type="button" disabled></button>
+        <button id="voteB" class="vote b" type="button" disabled></button>
+      </div>
+      <p class="hint">One vote each, and it's final. Results stay hidden until you vote.</p>
+    </div>
+  </div>
+
+  <section id="results" class="step" hidden aria-live="polite">
+    <div id="you" class="you"></div>
+    <div class="legend"><span><i style="background: var(--catch)"></i><b id="legA"></b></span><span><i style="background: var(--nocatch)"></i><b id="legB"></b></span></div>
+    <div id="rows" class="step"></div>
+    <div class="verdict"><span class="label">Neutral verdict</span><b id="verdict">Waiting on neutral fans</b></div>
+    <div class="share">
+      <button id="copy" class="btn" type="button">Copy the result</button>
+      <a id="postX" class="btn ghost" target="_blank" rel="noopener">Post on X</a>
+      <a id="postReddit" class="btn ghost" target="_blank" rel="noopener">Share to Reddit</a>
+      <span id="copied" class="status" role="status"></span>
+      <label for="shareText" class="label" hidden>Result text</label>
+      <textarea id="shareText" readonly hidden></textarea>
+    </div>
+  </section>
+
+  <p id="status" class="status" role="status"></p>
+
+  <div class="foot">In the <b>Homer</b> app your team is locked for the season, so nobody can claim to be neutral after the replay.</div>
+</main>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const status = (t) => { $('status').textContent = t; };
+  const fans = (k) => k === 'N' ? 'neutral fans' : TEAMS[k].label;
+  const pct = (a, b) => (a + b) ? Math.round((a / (a + b)) * 100) : null;
+  const cfg = window.CALL_CONFIG || {};
+
+  let play = null, playId = null, TEAMS = {}, ORDER = [];
+  let team = null, myVote = null, tally = {}, store = null;
+
+  // Storage: Supabase when configured, an in-memory stand-in otherwise (preview mode).
+  function supabaseStore() {
+    const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+    return {
+      async ready() {
+        const { data } = await sb.auth.getSession();
+        if (!data.session) {
+          const { error } = await sb.auth.signInAnonymously();
+          if (error) throw error;
+        }
+      },
+      async mine() {
+        const { data, error } = await sb.from('votes').select('team,pick').eq('play_id', playId).maybeSingle();
+        if (error) throw error;
+        return data;
+      },
+      async cast(v) {
+        const { error } = await sb.from('votes').insert({ play_id: playId, team: v.team, pick: v.pick });
+        if (error && error.code === '23505') return this.mine(); // already voted on this play
+        if (error) throw error;
+        return v;
+      },
+      async totals() {
+        const { data, error } = await sb.rpc('tally', { p_play: playId });
+        if (error) throw error;
+        return data || [];
+      }
+    };
+  }
+  function previewStore() {
+    let rows = [];
+    return {
+      async ready() {}, async mine() { return null; },
+      async cast(v) { rows.push(v); return v; },
+      async totals() {
+        const m = {};
+        rows.forEach((r) => { const k = r.team + r.pick; m[k] = (m[k] || { team: r.team, pick: r.pick, n: 0 }); m[k].n += 1; });
+        return Object.values(m);
+      }
+    };
+  }
+
+  function setTally(list) {
+    const t = {};
+    ORDER.forEach((k) => { t[k] = [0, 0]; });
+    list.forEach((r) => { if (t[r.team] && (r.pick === 'a' || r.pick === 'b')) t[r.team][r.pick === 'a' ? 0 : 1] += Number(r.n); });
+    tally = t;
+  }
+
+  function buildPage() {
+    play.teams.forEach((t) => { TEAMS[t.key] = { label: t.name + ' fans', name: t.name, color: t.color }; });
+    TEAMS.N = { label: 'Neutral fans', name: 'Neither', color: 'var(--neutral)' };
+    ORDER = play.teams.map((t) => t.key).concat('N');
+    setTally([]);
+
+    $('sample').hidden = !play.sample;
+    $('meta').textContent = play.meta;
+    $('q').textContent = play.question;
+    $('desc').textContent = play.desc;
+    $('voteA').textContent = play.options.a;
+    $('voteB').textContent = play.options.b;
+    $('legA').textContent = play.options.a;
+    $('legB').textContent = play.options.b;
+    document.title = 'Homer: ' + play.question;
+    if (!play.open) { $('pill').className = 'pill closed'; $('pill').lastChild.textContent = 'VOTING CLOSED'; }
+
+    if (play.clip) {
+      const r = $('replay');
+      r.textContent = ''; r.removeAttribute('role'); r.removeAttribute('aria-label');
+      const isVideo = /\.(mp4|webm|mov)(\?|$)/i.test(play.clip);
+      const el = document.createElement(isVideo ? 'video' : 'iframe');
+      el.src = play.clip;
+      if (isVideo) { el.controls = true; el.playsInline = true; } else { el.allow = 'encrypted-media; picture-in-picture'; el.allowFullscreen = true; el.title = 'Replay of the play'; }
+      r.append(el);
+    }
+
+    const box = $('teams');
+    ORDER.forEach((k) => {
+      const b = document.createElement('button');
+      b.className = 'team'; b.type = 'button'; b.dataset.team = k; b.setAttribute('aria-pressed', 'false');
+      const sw = document.createElement('span'); sw.className = 'sw'; sw.style.background = TEAMS[k].color;
+      const sm = document.createElement('small'); sm.textContent = k === 'N' ? 'neutral' : 'fan';
+      b.append(sw, TEAMS[k].name, sm);
+      b.addEventListener('click', () => {
+        team = k;
+        box.querySelectorAll('.team').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        $('voteA').disabled = !store; $('voteB').disabled = !store;
+      });
+      box.append(b);
+    });
+    $('voteArea').hidden = !play.open;
+  }
+
+  function render() {
+    // Results show after you vote, or to everyone once voting has closed.
+    if (!myVote && play.open) return;
+    $('voteArea').hidden = true;
+    $('results').hidden = false;
+    $('you').hidden = !myVote;
+    if (myVote) {
+      const mine = TEAMS[myVote.team];
+      const [ma, mb] = tally[myVote.team] || [0, 0];
+      const sidePct = myVote.pick === 'a' ? pct(ma, mb) : pct(mb, ma);
+      let line = 'You called it ' + play.options[myVote.pick].toLowerCase() + ' as one of the ' + fans(myVote.team) + '.';
+      const helps = play.favors && play.favors[myVote.pick];
+      if (helps && myVote.team !== 'N' && helps !== myVote.team) line = 'You called it against your own team. That is rare. Respect.';
+      if (sidePct !== null) line += ' ' + sidePct + '% of ' + fans(myVote.team) + ' agree with you.';
+      $('you').textContent = line;
+    }
+
+    const rows = $('rows');
+    rows.textContent = '';
+    ORDER.forEach((k) => {
+      const [a, b] = tally[k];
+      const p = pct(a, b);
+      const row = document.createElement('div'); row.className = 'row';
+      const head = document.createElement('div'); head.className = 'row-head';
+      const dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = TEAMS[k].color;
+      const name = document.createElement('span'); name.textContent = TEAMS[k].label;
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = (a + b) + ((a + b) === 1 ? ' vote' : ' votes');
+      head.append(dot, name, n);
+      const bar = document.createElement('div');
+      if (p === null) { bar.className = 'bar empty'; bar.textContent = 'No votes yet'; }
+      else {
+        bar.className = 'bar';
+        const sa = document.createElement('span'); sa.className = 'a'; sa.style.width = p + '%'; sa.textContent = p >= 12 ? p + '%' : '';
+        const sb = document.createElement('span'); sb.className = 'b'; sb.textContent = (100 - p) >= 12 ? (100 - p) + '%' : '';
+        bar.append(sa, sb);
+      }
+      row.append(head, bar);
+      rows.append(row);
+    });
+
+    const [na, nb] = tally.N;
+    const np = pct(na, nb);
+    $('verdict').textContent = np === null ? 'Waiting on neutral fans' : Math.abs(np - 50) < 3 ? 'Too close to call' : (np > 50 ? play.options.a + ', ' + np : play.options.b + ', ' + (100 - np)) + '% of neutral fans';
+
+    const parts = ORDER.map((k) => { const p = pct(tally[k][0], tally[k][1]); return p === null ? null : TEAMS[k].label + ' ' + p + '% ' + play.options.a.toLowerCase(); }).filter(Boolean);
+    const url = location.origin + location.pathname + '?play=' + encodeURIComponent(playId);
+    const text = 'The Call: ' + play.question.toLowerCase().replace(/\?$/, '') + '? ' + parts.join(', ') + '. Make your call:';
+    $('shareText').value = text + ' ' + url;
+    $('postX').href = 'https://x.com/intent/post?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+    $('postReddit').href = 'https://www.reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent('The Call: ' + play.question + ' ' + parts.join(', '));
+  }
+
+  $('copy').addEventListener('click', () => {
+    const text = $('shareText').value;
+    const done = () => { $('copied').textContent = 'Copied'; };
+    const fallback = () => { $('shareText').hidden = false; $('shareText').select(); $('copied').textContent = 'Select the text above and copy it'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+
+  async function refresh() {
+    try { setTally(await store.totals()); render(); }
+    catch (e) { status('Live results stopped updating. Reload the page to reconnect.'); }
+  }
+
+  async function cast(pick) {
+    if (!team || !store || myVote) return;
+    $('voteA').disabled = true; $('voteB').disabled = true;
+    try {
+      myVote = await store.cast({ team, pick });
+      status('');
+      await refresh();
+    } catch (e) {
+      status('Your vote did not save. Check your connection and try again.');
+      $('voteA').disabled = false; $('voteB').disabled = false;
+    }
+  }
+  $('voteA').addEventListener('click', () => cast('a'));
+  $('voteB').addEventListener('click', () => cast('b'));
+
+  async function start() {
+    let data;
+    try { data = await (await fetch('plays.json', { cache: 'no-cache' })).json(); }
+    catch (e) { $('q').textContent = 'This play could not load.'; return; }
+    playId = new URLSearchParams(location.search).get('play') || data.current;
+    play = data.plays[playId];
+    if (!play) { $('q').textContent = 'That play does not exist.'; return; }
+    buildPage();
+
+    const live = cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase;
+    $('preview').hidden = !!live;
+    const s = live ? supabaseStore() : previewStore();
+    try {
+      status('Connecting…');
+      await s.ready();
+      store = s;
+      myVote = await s.mine();
+      status('');
+      if (team) { $('voteA').disabled = false; $('voteB').disabled = false; }
+      await refresh();
+      setInterval(() => { if (!document.hidden && (myVote || !play.open)) refresh(); }, 5000);
+    } catch (e) {
+      status('Voting is not available right now. Try again in a minute.');
+    }
+  }
+
+  start();
+})();
+</script>
+</body>
+</html>

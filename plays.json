@@ -1,0 +1,33 @@
+{
+  "current": "gb-chi-sideline-catch",
+  "plays": {
+    "gb-chi-sideline-catch": {
+      "sample": true,
+      "meta": "NFL · Packers 20, Bears 17 · Q4 2:14 · 3rd & 6 at CHI 31",
+      "question": "Was it a catch?",
+      "desc": "Sideline grab by the Packers receiver, second foot near the line. Ruled a catch on the field.",
+      "clip": "",
+      "teams": [
+        {
+          "key": "GB",
+          "name": "Packers",
+          "color": "#FFB612"
+        },
+        {
+          "key": "CHI",
+          "name": "Bears",
+          "color": "#C83803"
+        }
+      ],
+      "options": {
+        "a": "Catch",
+        "b": "No catch"
+      },
+      "open": true,
+      "favors": {
+        "a": "GB",
+        "b": "CHI"
+      }
+    }
+  }
+}
