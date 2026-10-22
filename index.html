@@ -367,7 +367,8 @@ h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 40px; 
       await refresh();
       setInterval(() => { if (!document.hidden && (myVote || !play.open)) refresh(); }, 5000);
     } catch (e) {
-      status('Voting is not available right now. Try again in a minute.');
+      status('Voting is not available right now. Try again in a minute. (' + (e && (e.message || e.code) || 'unknown error') + ')');
+      console.error(e);
     }
   }
 
