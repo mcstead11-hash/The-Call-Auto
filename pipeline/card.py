@@ -105,6 +105,8 @@ def build(c, teams, league, event_id):
         call = f"Flag on the {who}: {pen['name'].lower()}{yds}."
         if rev:
             call += ' Overturned on replay.' if rev['outcome'] == 'reversed' else ' Upheld on replay.'
+        elif 'nullified' in (p.get('text') or '').lower() and 'touchdown' in action.lower():
+            call += ' The touchdown came off the board.'
         elif pen['no_play'] and action:
             call += ' The play came back.'
     else:
