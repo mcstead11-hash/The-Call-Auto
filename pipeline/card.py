@@ -42,9 +42,12 @@ def _slug(s):
 
 def _sentence(text):
     """The action part of ESPN's play text, without formation and penalty legalese."""
-    t = re.sub(r'\(\d+:\d+ - \d\w+\)\s*', '', text or '')
+    t = re.sub(r'\(\d+:\d+( - \d\w+)?\)\s*', '', text or '')
     t = re.sub(r'\((Shotgun|No Huddle[^)]*|Pistol)\)\s*', '', t, flags=re.I)
-    t = re.split(r'PENALTY|The Replay Official|\bReplay\b|challenged', t, flags=re.I)[0]
+    t = re.sub(r'^\s*(No Huddle-?)?(Shotgun|Pistol)?\s*', '', t, flags=re.I)
+    t = re.sub(r'#\d+ ', '', t)
+    t = re.sub(r'\*\* Injury Update:[^.]*\.\s*|\S+ reported in as eligible\.\s*', '', t)
+    t = re.split(r'PENALTY|The Replay Official|The previous play|\bReplay\b|challenged|NULLIFIED', t, flags=re.I)[0]
     t = re.sub(r'\s+', ' ', t).strip(' .;,')
     return t[:150].rsplit(' ', 1)[0] + '…' if len(t) > 150 else t
 

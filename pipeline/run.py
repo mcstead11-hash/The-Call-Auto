@@ -93,7 +93,7 @@ def throttled(state):
 
 def describe(c):
     p = c['play']
-    return f"{c['score']:6.1f}  {c['name']}  Q{(p.get('period') or {}).get('number')} {(p.get('clock') or {}).get('displayValue')}  swing={c['swing']}  {(p.get('text') or '')[:150]}"
+    return f"{c['score']:6.1f}  {c['name']}  Q{(p.get('period') or {}).get('number')} {(p.get('clock') or {}).get('displayValue')}  swing={c['swing']}  {(p.get('text') or '')[:int(os.environ.get('TEXT_WIDTH', 150))]}"
 
 
 def backfill_clips(data):
@@ -124,7 +124,7 @@ def main():
     for c in found[:args.top]:
         print(('PUBLISH ' if c['publish'] else '        ') + describe(c))
     if args.dry_run:
-        for c in [c for c in found if c['publish']][:5]:
+        for c in [c for c in found if c['publish']][:int(os.environ.get('SAMPLES', 5))]:
             pid, entry = card.build(c, c['teams'], c['league'], c['event'])
             print('\n--- ' + pid)
             print(json.dumps(entry, indent=2))

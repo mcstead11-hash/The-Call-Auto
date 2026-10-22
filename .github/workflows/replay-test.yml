@@ -5,27 +5,12 @@ on:
 jobs:
   replay:
     runs-on: ubuntu-latest
+    env:
+      TEXT_WIDTH: '400'
+      SAMPLES: '0'
     steps:
       - uses: actions/checkout@v4
-      - run: curl -s -o /dev/null -w '%{http_code}\n' -A 'Mozilla/5.0 (compatible; the-call/1.0)' https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard
-      - run: python3 -m pipeline.run --league nfl --date 20261018 --dry-run --top 25
-      - run: python3 -m pipeline.run --league nfl --date 20261019 --dry-run --top 10
+      - run: python3 -m pipeline.run --league nfl --date 20261018 --dry-run --top 15
+      - run: python3 -m pipeline.run --league nfl --date 20261019 --dry-run --top 5
       - run: python3 -m pipeline.run --league college-football --date 20261017 --dry-run --top 15
-      - name: Win-probability alignment check
-        run: |
-          python3 - <<'PY'
-          from pipeline import espn
-          b = espn.scoreboard('nfl', '20261018')
-          ev = b['events'][0]
-          s = espn.summary('nfl', ev['id'])
-          wp = espn.win_probability(s)
-          ps = espn.plays(s)
-          print(ev['shortName'], len(ps), 'plays', len(wp), 'wp points')
-          print('first play keys:', sorted(ps[0].keys()))
-          print('start keys:', sorted((ps[0].get('start') or {}).keys()))
-          ids = [str(p['id']) for p in ps]
-          for i, p in enumerate(ps):
-              if p.get('scoringPlay') or 'PENALTY' in (p.get('text') or ''):
-                  w = [round(wp.get(ids[j], -1), 3) if 0 <= j < len(ids) else None for j in (i - 1, i, i + 1)]
-                  print(w, p.get('text', '')[:140])
-          PY
+      - run: SAMPLES=2 python3 -m pipeline.run --league nfl --date 20261018 --dry-run --top 0
