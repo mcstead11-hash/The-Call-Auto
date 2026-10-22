@@ -1,0 +1,88 @@
+# Every 5 minutes: look for big referee calls in live NFL and FBS games, publish the
+# biggest new one to the page, and post it (posting stays in draft mode until the
+# repository variable POSTING_MODE is set to "live").
+name: Watch games
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Replay a past day (YYYYMMDD) instead of live games'
+        required: false
+      league:
+        description: 'nfl, college-football, or blank for both'
+        required: false
+      dry_run:
+        description: 'Only print what it would pick'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: watch-games
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      POSTING_MODE: ${{ vars.POSTING_MODE }}
+      THRESHOLD: ${{ vars.THRESHOLD }}
+      MAX_PER_GAME: ${{ vars.MAX_PER_GAME }}
+      MAX_PER_DAY: ${{ vars.MAX_PER_DAY }}
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find calls
+        run: |
+          set -- 
+          [ -n "${{ inputs.date }}" ] && set -- "$@" --date "${{ inputs.date }}"
+          [ -n "${{ inputs.league }}" ] && set -- "$@" --league "${{ inputs.league }}"
+          [ "${{ inputs.dry_run }}" = "true" ] && set -- "$@" --dry-run
+          # Blank env vars would override the defaults in run.py.
+          for v in THRESHOLD MAX_PER_GAME MAX_PER_DAY; do [ -z "${!v}" ] && unset $v; done
+          python3 -m pipeline.run "$@"
+
+      - name: Publish to the page
+        id: commit
+        run: |
+          git add -A plays.json p drafts pipeline/state.json 2>/dev/null || true
+          if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git config user.name "the-call-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Auto: new disputed call"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          # Pushes made with the workflow token don't always start a Pages build, so ask for one.
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Post once the page is live
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
+          REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
+          REDDIT_SUBREDDIT: ${{ vars.REDDIT_SUBREDDIT }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+        run: |
+          id=$(python3 -c "import json;print(json.load(open('plays.json'))['current'])")
+          url="https://mcstead11-hash.github.io/The-Call-Auto/p/$id/"
+          for i in $(seq 1 30); do curl -sfo /dev/null "$url" && break; sleep 10; done
+          python3 -m pipeline.post
+          git add -A drafts pipeline/state.json
+          git diff --cached --quiet || { git commit -m "Auto: post results"; git pull --rebase; git push; }
