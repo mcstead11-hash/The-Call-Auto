@@ -7,6 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Probe ESPN
+        run: |
+          U='https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'
+          curl -s -o /dev/null -w 'plain %{http_code}\n' "$U"
+          curl -s -o /dev/null -w 'ua %{http_code}\n' -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36' "$U?dates=20261018"
+          curl -s -o /dev/null -w 'limit %{http_code}\n' -A 'Mozilla/5.0' "$U?limit=300&dates=20261018"
+          curl -s -o /dev/null -w 'core %{http_code}\n' 'https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'
+          curl -s -o /dev/null -w 'cdn %{http_code}\n' 'https://cdn.espn.com/core/nfl/scoreboard?xhr=1'
+          curl -s -D - -o /dev/null -A 'the-call-bot/1.0' "$U" | head -15
       - run: python3 -m pipeline.run --league nfl --date 20261018 --dry-run --top 25
       - run: python3 -m pipeline.run --league nfl --date 20261019 --dry-run --top 10
       - run: python3 -m pipeline.run --league college-football --date 20261017 --dry-run --top 15
