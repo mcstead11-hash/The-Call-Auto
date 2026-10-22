@@ -338,7 +338,8 @@ h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 40px; 
       status('');
       await refresh();
     } catch (e) {
-      status('Your vote did not save. Check your connection and try again.');
+      status('Your vote did not save. Check your connection and try again. (' + (e && (e.message || e.code) || 'unknown error') + ')');
+      console.error(e);
       $('voteA').disabled = false; $('voteB').disabled = false;
     }
   }

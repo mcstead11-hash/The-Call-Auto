@@ -22,6 +22,10 @@ drop policy if exists "read own vote" on public.votes;
 create policy "read own vote" on public.votes
   for select to authenticated using (user_id = auth.uid());
 
+-- Newer Supabase projects don't grant table access to the API roles by default.
+grant usage on schema public to anon, authenticated;
+grant select, insert on public.votes to authenticated;
+
 -- Everyone can see the totals, never the individual rows.
 create or replace function public.tally(p_play text)
 returns table (team text, pick text, n bigint)
