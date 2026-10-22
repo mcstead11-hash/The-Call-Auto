@@ -11,7 +11,11 @@ def main():
         path = os.path.join(run.DRAFTS, pid + '.json')
         with open(path) as f:
             rec = json.load(f)
-        rec['results'] = social.publish(rec['drafts'])
+        detected = run._iso(run.page.load_plays()['plays'].get(pid, {}).get('auto', {}).get('detected'))
+        if detected and run.now() - detected > run.dt.timedelta(hours=2):
+            rec['results'] = 'expired: not posted, the call is over two hours old'
+        else:
+            rec['results'] = social.publish(rec['drafts'])
         with open(path, 'w') as f:
             json.dump(rec, f, indent=2)
         print(pid, rec['results'])

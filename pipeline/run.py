@@ -15,11 +15,11 @@ STATE = os.path.join(ROOT, 'pipeline', 'state.json')
 DRAFTS = os.path.join(ROOT, 'drafts')
 
 LIMITS = {
-    'per_game': int(os.environ.get('MAX_PER_GAME', 2)),
-    'per_day': int(os.environ.get('MAX_PER_DAY', 8)),
-    'cooldown_min': int(os.environ.get('COOLDOWN_MIN', 10)),
-    'fresh_min': int(os.environ.get('FRESH_MIN', 25)),   # live mode ignores calls older than this
-    'threshold': float(os.environ.get('THRESHOLD', detect.DEFAULTS['threshold'])),
+    'per_game': int(os.environ.get('MAX_PER_GAME') or 2),
+    'per_day': int(os.environ.get('MAX_PER_DAY') or 8),
+    'cooldown_min': int(os.environ.get('COOLDOWN_MIN') or 10),
+    'fresh_min': int(os.environ.get('FRESH_MIN') or 25),   # live mode ignores calls older than this
+    'threshold': float(os.environ.get('THRESHOLD') or detect.DEFAULTS['threshold']),
 }
 
 

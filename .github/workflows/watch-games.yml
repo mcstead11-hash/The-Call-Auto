@@ -46,8 +46,6 @@ jobs:
           [ -n "${{ inputs.date }}" ] && set -- "$@" --date "${{ inputs.date }}"
           [ -n "${{ inputs.league }}" ] && set -- "$@" --league "${{ inputs.league }}"
           [ "${{ inputs.dry_run }}" = "true" ] && set -- "$@" --dry-run
-          # Blank env vars would override the defaults in run.py.
-          for v in THRESHOLD MAX_PER_GAME MAX_PER_DAY; do [ -z "${!v}" ] && unset $v; done
           python3 -m pipeline.run "$@"
 
       - name: Publish to the page
@@ -66,7 +64,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Post once the page is live
-        if: steps.commit.outputs.changed == 'true'
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
@@ -80,9 +77,14 @@ jobs:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
         run: |
-          id=$(python3 -c "import json;print(json.load(open('plays.json'))['current'])")
-          url="https://mcstead11-hash.github.io/The-Call-Auto/p/$id/"
-          for i in $(seq 1 30); do curl -sfo /dev/null "$url" && break; sleep 10; done
+          ids=$(python3 -c "import json;print(' '.join(json.load(open('pipeline/state.json'))['pending_posts']))" 2>/dev/null || true)
+          [ -z "$ids" ] && exit 0
+          for id in $ids; do
+            url="https://mcstead11-hash.github.io/The-Call-Auto/p/$id/"
+            for i in $(seq 1 30); do curl -sfo /dev/null "$url" && break; sleep 10; done
+          done
           python3 -m pipeline.post
           git add -A drafts pipeline/state.json
+          git config user.name "the-call-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git diff --cached --quiet || { git commit -m "Auto: post results"; git pull --rebase; git push; }
