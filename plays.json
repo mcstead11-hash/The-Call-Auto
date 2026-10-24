@@ -1,5 +1,5 @@
 {
-  "current": "ncsu-stan-pi-q3-1314-858272",
+  "current": "gast-arst-rtp-q1-138-869935",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -103,6 +103,42 @@
       "favors": {
         "a": "STAN",
         "b": "NCSU"
+      }
+    },
+    "gast-arst-rtp-q1-138-869935": {
+      "sample": false,
+      "meta": "CFB · Red Wolves 7, Panthers 0 · Q1 1:38 · 2nd & 5 at ARST 26",
+      "question": "Was it roughing the passer?",
+      "desc": "T.Owens pass intercepted by at ASU40. Flag on the Panthers: roughing the passer, 15 yards. The play came back.",
+      "clip": "",
+      "watch": "https://www.espn.com/college-football/game/_/gameId/401869935",
+      "teams": [
+        {
+          "key": "GAST",
+          "name": "Panthers",
+          "color": "#0039a6"
+        },
+        {
+          "key": "ARST",
+          "name": "Red Wolves",
+          "color": "#cc092f"
+        }
+      ],
+      "options": {
+        "a": "Flag",
+        "b": "No flag"
+      },
+      "open": true,
+      "auto": {
+        "league": "college-football",
+        "event": "401869935",
+        "espn_play": "401869935149",
+        "score": 17.6,
+        "detected": "2026-10-24T23:37:48+00:00"
+      },
+      "favors": {
+        "a": "ARST",
+        "b": "GAST"
       }
     }
   }
