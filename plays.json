@@ -1,5 +1,5 @@
 {
-  "current": "ari-lar-ur-q4-047-873004",
+  "current": "ncsu-stan-pi-q3-1314-858272",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -67,6 +67,42 @@
       "impact": {
         "swing": 38,
         "toward": "ARI"
+      }
+    },
+    "ncsu-stan-pi-q3-1314-858272": {
+      "sample": false,
+      "meta": "CFB · Cardinal 21, Wolfpack 14 · Q3 13:14 · 3rd & 2 at STAN 47",
+      "question": "Was it pass interference?",
+      "desc": "C.Bailey pass complete short right to E.Dowdy caught at STAN46, for 47 yards to the STAN00 TOUCHDOWN. Flag on the Wolfpack: pass interference, 10 yards. The touchdown came off the board.",
+      "clip": "",
+      "watch": "https://www.espn.com/college-football/game/_/gameId/401858272",
+      "teams": [
+        {
+          "key": "NCSU",
+          "name": "Wolfpack",
+          "color": "#cc0000"
+        },
+        {
+          "key": "STAN",
+          "name": "Cardinal",
+          "color": "#8c1515"
+        }
+      ],
+      "options": {
+        "a": "Flag",
+        "b": "No flag"
+      },
+      "open": true,
+      "auto": {
+        "league": "college-football",
+        "event": "401858272",
+        "espn_play": "401858272432",
+        "score": 19.9,
+        "detected": "2026-10-24T04:57:08+00:00"
+      },
+      "favors": {
+        "a": "STAN",
+        "b": "NCSU"
       }
     }
   }
