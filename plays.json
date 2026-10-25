@@ -1,5 +1,5 @@
 {
-  "current": "gast-arst-rtp-q1-138-869935",
+  "current": "van-uk-holding-q3-1128-856729",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -139,6 +139,42 @@
       "favors": {
         "a": "ARST",
         "b": "GAST"
+      }
+    },
+    "van-uk-holding-q3-1128-856729": {
+      "sample": false,
+      "meta": "CFB · Wildcats 14, Commodores 10 · Q3 11:28 · 1st & 10 at VAN 13",
+      "question": "Was it holding?",
+      "desc": "J.Barnes rush right for 13 yards gain (7) to the VANDY00 TOUCHDOWN. Flag on the Wildcats: holding, 10 yards. The touchdown came off the board.",
+      "clip": "",
+      "watch": "https://www.espn.com/college-football/game/_/gameId/401856729",
+      "teams": [
+        {
+          "key": "VAN",
+          "name": "Commodores",
+          "color": "#000000"
+        },
+        {
+          "key": "UK",
+          "name": "Wildcats",
+          "color": "#0033a0"
+        }
+      ],
+      "options": {
+        "a": "Holding",
+        "b": "Clean"
+      },
+      "open": true,
+      "auto": {
+        "league": "college-football",
+        "event": "401856729",
+        "espn_play": "401856729374",
+        "score": 15.8,
+        "detected": "2026-10-25T01:37:02+00:00"
+      },
+      "favors": {
+        "a": "VAN",
+        "b": "UK"
       }
     }
   }
