@@ -1,5 +1,5 @@
 {
-  "current": "van-uk-holding-q3-1128-856729",
+  "current": "gb-det-rtp-q4-245-873020",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -175,6 +175,46 @@
       "favors": {
         "a": "VAN",
         "b": "UK"
+      }
+    },
+    "gb-det-rtp-q4-245-873020": {
+      "sample": false,
+      "meta": "NFL · Lions 17, Packers 17 · Q4 2:45 · 2nd & 8 at DET 27",
+      "question": "Was it roughing the passer?",
+      "desc": "J.Goff pass short middle to S.LaPorta to DET 45 for 18 yards (X.McKinney; I.McDuffie). Flag on the Packers: roughing the passer, 15 yards.",
+      "clip": "",
+      "watch": "https://www.espn.com/nfl/game/_/gameId/401873020",
+      "teams": [
+        {
+          "key": "GB",
+          "name": "Packers",
+          "color": "#204e32"
+        },
+        {
+          "key": "DET",
+          "name": "Lions",
+          "color": "#0076b6"
+        }
+      ],
+      "options": {
+        "a": "Flag",
+        "b": "No flag"
+      },
+      "open": true,
+      "auto": {
+        "league": "nfl",
+        "event": "401873020",
+        "espn_play": "4018730203950",
+        "score": 27.2,
+        "detected": "2026-10-25T23:30:08+00:00"
+      },
+      "favors": {
+        "a": "DET",
+        "b": "GB"
+      },
+      "impact": {
+        "swing": 18,
+        "toward": "DET"
       }
     }
   }
