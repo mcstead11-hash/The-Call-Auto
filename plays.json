@@ -1,5 +1,5 @@
 {
-  "current": "gb-det-rtp-q4-245-873020",
+  "current": "txst-bois-review-interception-q4-515-860908",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -215,6 +215,46 @@
       "impact": {
         "swing": 18,
         "toward": "DET"
+      }
+    },
+    "txst-bois-review-interception-q4-515-860908": {
+      "sample": false,
+      "meta": "CFB · Bobcats 39, Broncos 34 · Q4 5:15 · 3rd & 13 at TXST 22",
+      "question": "Was it an interception?",
+      "desc": "Called on the field: T.Cusano pass intercepted by M.Tuioti at TXS26 M.Tuioti return 15 yards to the TXS11 (T.Cusano). Ruling stood after review.",
+      "clip": "",
+      "watch": "https://www.espn.com/college-football/game/_/gameId/401860908",
+      "teams": [
+        {
+          "key": "TXST",
+          "name": "Bobcats",
+          "color": "#501214"
+        },
+        {
+          "key": "BOIS",
+          "name": "Broncos",
+          "color": "#0033a0"
+        }
+      ],
+      "options": {
+        "a": "Pick",
+        "b": "No pick"
+      },
+      "open": true,
+      "auto": {
+        "league": "college-football",
+        "event": "401860908",
+        "espn_play": "401860908787",
+        "score": 25.2,
+        "detected": "2026-11-01T05:56:45+00:00"
+      },
+      "favors": {
+        "a": "BOIS",
+        "b": "TXST"
+      },
+      "impact": {
+        "swing": 28,
+        "toward": "BOIS"
       }
     }
   }
