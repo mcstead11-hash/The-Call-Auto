@@ -1,5 +1,5 @@
 {
-  "current": "txst-bois-review-interception-q4-515-860908",
+  "current": "ucla-minn-holding-q2-032-858512",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -255,6 +255,42 @@
       "impact": {
         "swing": 28,
         "toward": "BOIS"
+      }
+    },
+    "ucla-minn-holding-q2-032-858512": {
+      "sample": false,
+      "meta": "CFB · Bruins 10, Golden Gophers 7 · Q2 0:32 · 2nd & 1 at UCLA 35",
+      "question": "Was it holding?",
+      "desc": "D.Lindsey pass intercepted by D.Lovett at UCLA23 QB hurried by S.Taylor, End Of Play. Flag on the Bruins: holding, 10 yards. The play came back.",
+      "clip": "",
+      "watch": "https://www.espn.com/college-football/game/_/gameId/401858512",
+      "teams": [
+        {
+          "key": "UCLA",
+          "name": "Bruins",
+          "color": "#2774ae"
+        },
+        {
+          "key": "MINN",
+          "name": "Golden Gophers",
+          "color": "#5e0a2f"
+        }
+      ],
+      "options": {
+        "a": "Holding",
+        "b": "Clean"
+      },
+      "open": true,
+      "auto": {
+        "league": "college-football",
+        "event": "401858512",
+        "espn_play": "401858512358",
+        "score": 16.0,
+        "detected": "2026-11-07T18:55:56+00:00"
+      },
+      "favors": {
+        "a": "MINN",
+        "b": "UCLA"
       }
     }
   }
