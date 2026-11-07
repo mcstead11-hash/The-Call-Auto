@@ -1,5 +1,5 @@
 {
-  "current": "ucla-minn-holding-q2-032-858512",
+  "current": "most-fiu-pi-q2-146-871074",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -291,6 +291,46 @@
       "favors": {
         "a": "MINN",
         "b": "UCLA"
+      }
+    },
+    "most-fiu-pi-q2-146-871074": {
+      "sample": false,
+      "meta": "CFB · Panthers 3, Bears 0 · Q2 1:46 · 2nd & 20 at FIU 38",
+      "question": "Was it pass interference?",
+      "desc": "H.Belin IV pass intercepted by S.Sterlin at FIU05. Flag on the Panthers: pass interference, 15 yards. The play came back.",
+      "clip": "",
+      "watch": "https://www.espn.com/college-football/game/_/gameId/401871074",
+      "teams": [
+        {
+          "key": "MOST",
+          "name": "Bears",
+          "color": "#5e0009"
+        },
+        {
+          "key": "FIU",
+          "name": "Panthers",
+          "color": "#091f3f"
+        }
+      ],
+      "options": {
+        "a": "Flag",
+        "b": "No flag"
+      },
+      "open": true,
+      "auto": {
+        "league": "college-football",
+        "event": "401871074",
+        "espn_play": "401871074340",
+        "score": 21.8,
+        "detected": "2026-11-07T22:28:39+00:00"
+      },
+      "favors": {
+        "a": "MOST",
+        "b": "FIU"
+      },
+      "impact": {
+        "swing": 6,
+        "toward": "MOST"
       }
     }
   }
