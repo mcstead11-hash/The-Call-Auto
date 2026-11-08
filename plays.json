@@ -1,5 +1,5 @@
 {
-  "current": "most-fiu-pi-q2-146-871074",
+  "current": "uga-miss-rtp-q2-1142-856741",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -331,6 +331,42 @@
       "impact": {
         "swing": 6,
         "toward": "MOST"
+      }
+    },
+    "uga-miss-rtp-q2-1142-856741": {
+      "sample": false,
+      "meta": "CFB · Bulldogs 21, Rebels 0 · Q2 11:42 · 2nd & 6 at UGA 30",
+      "question": "Was it roughing the passer?",
+      "desc": "G.Stockton pass intercepted by S.Denson at OM32. Flag on the Rebels: roughing the passer, 15 yards. The play came back.",
+      "clip": "",
+      "watch": "https://www.espn.com/college-football/game/_/gameId/401856741",
+      "teams": [
+        {
+          "key": "UGA",
+          "name": "Bulldogs",
+          "color": "#ba0c2f"
+        },
+        {
+          "key": "MISS",
+          "name": "Rebels",
+          "color": "#13294b"
+        }
+      ],
+      "options": {
+        "a": "Flag",
+        "b": "No flag"
+      },
+      "open": true,
+      "auto": {
+        "league": "college-football",
+        "event": "401856741",
+        "espn_play": "401856741217",
+        "score": 15.7,
+        "detected": "2026-11-08T01:43:30+00:00"
+      },
+      "favors": {
+        "a": "UGA",
+        "b": "MISS"
       }
     }
   }
