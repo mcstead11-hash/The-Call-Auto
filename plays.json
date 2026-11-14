@@ -1,5 +1,5 @@
 {
-  "current": "uga-miss-rtp-q2-1142-856741",
+  "current": "wake-smu-penalty-q4-1257-858301",
   "plays": {
     "gb-chi-sideline-catch": {
       "sample": true,
@@ -367,6 +367,42 @@
       "favors": {
         "a": "UGA",
         "b": "MISS"
+      }
+    },
+    "wake-smu-penalty-q4-1257-858301": {
+      "sample": false,
+      "meta": "CFB · Demon Deacons 49, Mustangs 7 · Q4 12:57 · 2nd & 10 at SMU 35",
+      "question": "Was it illegal block in back?",
+      "desc": "K.Jennings pass complete short right to C.Rhodes caught at SMU29, for 65 yards to the WF00 TOUCHDOWN. Flag on the Mustangs: illegal block in back, 10 yards. The touchdown came off the board.",
+      "clip": "",
+      "watch": "https://www.espn.com/college-football/game/_/gameId/401858301",
+      "teams": [
+        {
+          "key": "WAKE",
+          "name": "Demon Deacons",
+          "color": "#ceb888"
+        },
+        {
+          "key": "SMU",
+          "name": "Mustangs",
+          "color": "#a80000"
+        }
+      ],
+      "options": {
+        "a": "Flag",
+        "b": "No flag"
+      },
+      "open": true,
+      "auto": {
+        "league": "college-football",
+        "event": "401858301",
+        "espn_play": "401858301719",
+        "score": 15.0,
+        "detected": "2026-11-14T20:10:37+00:00"
+      },
+      "favors": {
+        "a": "WAKE",
+        "b": "SMU"
       }
     }
   }
